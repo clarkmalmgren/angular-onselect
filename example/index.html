@@ -5,7 +5,9 @@
   <title>Angular OnSelect Example</title>
 
   <script src="../node_modules/angular/angular.js"></script>
-  <script src="../src/angular-onselect.js"></script>
+  <script src="../src/onselect.module.js"></script>
+  <script src="../src/onselect.directive.js"></script>
+  <script src="../src/range.service.js"></script>
   <script src="app.js"></script>
 
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
@@ -13,9 +15,18 @@
 <body ng-controller="ExampleController as vm">
 
 <div class="container">
-  <h1>Hello {{vm.person}}!</h1>
 
-  <div on-select="vm.doStuff(text);">
+  <div ng-if="vm.lastSelectedText">
+    <h1>You have selected the following text:</h1>
+    <p>{{vm.lastSelectedText}}</p>
+  </div>
+  <div ng-if="!vm.lastSelectedText">
+    <h1>You haven't yet selected any text</h1>
+  </div>
+
+  <hr>
+
+  <div on-select="vm.doStuff(selection);" snap-to-word auto-highlight>
     <p>
       Bacon ipsum dolor amet ut beef ribs culpa alcatra cupidatat bacon sint dolor ipsum. Pork loin picanha nisi
       leberkas sausage. Pork chop consequat boudin, rump duis sausage ut cow swine ham alcatra dolor. Consectetur strip

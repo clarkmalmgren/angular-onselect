@@ -1,0 +1,31 @@
+{
+  "name": "angular-onselect",
+  "version": "0.0.1",
+  "description": "Generic event handler for selecting text regardless of element type",
+  "main": "dist/angular-onselect.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clarkmalmgren/angular-onselect.git"
+  },
+  "keywords": [
+    "angular",
+    "onselect",
+    "on-select",
+    "event",
+    "handler"
+  ],
+  "author": "Clark Malmgren <cmalmgren@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clarkmalmgren/angular-onselect/issues"
+  },
+  "homepage": "https://github.com/clarkmalmgren/angular-onselect#readme",
+  "devDependencies": {
+    "bootstrap": "^3.3.5",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.0.0"
+  }
+}
