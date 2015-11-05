@@ -4,7 +4,7 @@
   "description": "Generic event handler for selecting text regardless of element type",
   "main": "dist/angular-onselect.js",
   "scripts": {
-    "test": "gulp test-ci"
+    "test": "gulp coverage"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
     "gulp": "^3.9.0",
     "gulp-babel": "^6.0.0",
     "gulp-concat": "^2.6.0",
+    "gulp-coveralls": "^0.1.4",
     "karma": "^0.13.15",
     "karma-chai": "^0.1.0",
     "karma-chai-sinon": "^0.1.5",

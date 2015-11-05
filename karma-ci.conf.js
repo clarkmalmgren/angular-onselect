@@ -31,6 +31,7 @@ module.exports = function (config) {
     },
 
     coverageReporter: {
+      type: 'lcov',
       dir: 'build/test-reports/coverage',
       subdir: '.'
     },
