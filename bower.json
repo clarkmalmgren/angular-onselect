@@ -1,0 +1,27 @@
+{
+  "name": "angular-onselect",
+  "version": "0.0.1",
+  "homepage": "https://github.com/clarkmalmgren/angular-onselect",
+  "authors": [
+    "Clark Malmgren <cmalmgren@grubhub.com>"
+  ],
+  "description": "Generic event handler for selecting text regardless of element type",
+  "main": "dist/angular-onselect.js",
+  "moduleType": [],
+  "keywords": [
+    "angular",
+    "angularjs",
+    "on-select",
+    "onselect",
+    "event",
+    "handler"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
