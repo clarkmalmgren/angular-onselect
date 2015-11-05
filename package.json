@@ -26,6 +26,7 @@
   "devDependencies": {
     "bootstrap": "^3.3.5",
     "gulp": "^3.9.0",
-    "gulp-babel": "^6.0.0"
+    "gulp-babel": "^6.0.0",
+    "gulp-concat": "^2.6.0"
   }
 }
