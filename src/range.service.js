@@ -29,6 +29,7 @@
     var service = {};
 
     service.process = process;
+    service.Selection = Selection;
 
     return service;
 
@@ -47,7 +48,7 @@
       var windowSelection = $window.getSelection();
       var range = windowSelection.getRangeAt(0);
 
-      var selection = new Selection(range);
+      var selection = service.Selection(range);
 
       if (options.snapToWord) {
         selection.snapToWord();
@@ -156,13 +157,10 @@
       }
 
       if (range.startContainer === range.endContainer) {
-        selection._highlighter = document.createElement(tag);
+        selection._highlighter = $window.document.createElement(tag);
         decorator(selection._highlighter);
 
         range.surroundContents(selection._highlighter);
-
-        setTimeout(function () {
-        }, 2000);
       }
     }
 
