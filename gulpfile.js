@@ -1,12 +1,12 @@
 (function() {
   'use strict';
 
-  const del = require('del');
-  const gulp = require('gulp');
-  const concat = require('gulp-concat');
-  const karma = require('karma');
+  var del = require('del');
+  var gulp = require('gulp');
+  var concat = require('gulp-concat');
+  var karma = require('karma');
 
-  const sources = [
+  var sources = [
     'src/**/*.module.js',
     'src/**/!(*.spec).js'
   ];
