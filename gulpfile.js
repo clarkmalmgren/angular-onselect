@@ -28,6 +28,13 @@
     }, done).start();
   });
 
+  gulp.task('test-ci', function(done) {
+    new karma.Server({
+      configFile: __dirname + '/karma-ci.conf.js',
+      singleRun: true
+    }, done).start();
+  });
+
   gulp.task('test-run', function(done) {
     new karma.Server({
       configFile: __dirname + '/karma.conf.js',
