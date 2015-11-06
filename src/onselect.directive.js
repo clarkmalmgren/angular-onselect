@@ -51,12 +51,12 @@
       restrict: 'A',
       scope: false,
       link: function(scope, element, attrs) {
-        element.bind('mouseup', function () {
-          var options = {
-            snapToWord: ('snapToWord' in attrs),
-            highlight: ('autoHighlight' in attrs)
-          };
+        var options = {
+          snapToWord: ('snapToWord' in attrs),
+          highlight: ('autoHighlight' in attrs)
+        };
 
+        element.bind('mouseup', function () {
           var selection = RangeService.process(options);
 
           scope.$eval(attrs.onSelect, {
