@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Angular On Select by clarkmalmgren</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Angular On Select</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/clarkmalmgren/angular-onselect" class="btn">View on GitHub</a>
+      <a href="https://github.com/clarkmalmgren/angular-onselect/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/clarkmalmgren/angular-onselect/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="angular-on-select-directive" class="anchor" href="#angular-on-select-directive" aria-hidden="true"><span class="octicon octicon-link"></span></a>Angular On Select Directive</h1>
+
+<p><a href=""><img src="https://img.shields.io/badge/license-mit-green.svg" alt="license:mit"></a><br>
+<a href=""><img src="https://img.shields.io/travis/clarkmalmgren/angular-onselect.svg" alt="Travis"></a><br>
+<a href=""><img src="https://img.shields.io/coveralls/clarkmalmgren/angular-onselect.svg" alt="Coveralls"></a><br>
+<a href=""><img src="https://img.shields.io/npm/dt/angular-onselect.svg" alt="npm"></a><br>
+<a href=""><img src="https://img.shields.io/npm/v/angular-onselect.svg" alt="npm"></a><br>
+<a href=""><img src="https://img.shields.io/bower/v/angular-onselect.svg" alt="Bower"></a></p>
+
+<p>Directive that allows for click-and-drag or just a click for highlighting words within any container
+regardless of type. The <code>on-select</code> attribute value is evaluated whenever a word or a group of words
+have been highlighted. The selection object is passed in as <code>selection</code> in the evaluated component.</p>
+
+<p>Additionally, if <code>auto-highlight</code> is also present, upon selection the selected text is automatically
+highlighted. This is * effectively the same as calling <code>selection.highlight(..)</code> with some basic
+defaults.</p>
+
+<p>If <code>snap-to-word</code> is present, the selected text is expanded to include whole words (including punctuation).
+If snap-to-word is turned on, simply clicking on a word is the same as highlighting the whole word.</p>
+
+<h2>
+<a id="example-usage" class="anchor" href="#example-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Usage</h2>
+
+<p>The below example shows how to use <code>on-select</code> to automatically highlight a word and then after <code>2000ms</code> the highlight
+is removed. This is actually demoed in <code>example/index.html</code>.</p>
+
+<div class="highlight highlight-source-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>example<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>onSelect<span class="pl-pds">'</span></span>])
+  .controller(<span class="pl-s"><span class="pl-pds">'</span>ExampleController<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>() {
+    <span class="pl-k">var</span> vm <span class="pl-k">=</span> <span class="pl-v">this</span>;
+    vm.handler <span class="pl-k">=</span> handler;
+    <span class="pl-k">return</span> <span class="pl-v">this</span>;
+
+    <span class="pl-k">function</span> <span class="pl-en">handler</span>(<span class="pl-smi">selection</span>) {
+      <span class="pl-c1">setTimeout</span>(<span class="pl-k">function</span>() {
+        selection.removeHighlight();
+      }, <span class="pl-c1">2000</span>);
+    };
+  });</pre></div>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">div</span> <span class="pl-e">ng-controller</span>=<span class="pl-s"><span class="pl-pds">"</span>ExampleController as vm<span class="pl-pds">"</span></span>&gt;
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">on-select</span>=<span class="pl-s"><span class="pl-pds">"</span>vm.handler(selection);<span class="pl-pds">"</span></span> <span class="pl-e">auto-highlight</span> <span class="pl-e">snap-to-word</span>&gt;
+    Bacon ipsum dolor amet ut beef ribs culpa...
+  &lt;/<span class="pl-ent">div</span>&gt;
+&lt;/<span class="pl-ent">div</span>&gt;</pre></div>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<div class="highlight highlight-source-shell"><pre>$ npm install --save angular-onselect
+
+   -- or --
+
+$ bower install --save angular-onselect</pre></div>
+
+<h2>
+<a id="submitting-issues" class="anchor" href="#submitting-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Submitting Issues</h2>
+
+<p>Please file a github issue for any problems or feature requests.</p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>See <a href="CONTRIBUTING.md">Contributing</a></p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p><a href="LICENSE">Licensed under MIT</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/clarkmalmgren/angular-onselect">Angular On Select</a> is maintained by <a href="https://github.com/clarkmalmgren">clarkmalmgren</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
