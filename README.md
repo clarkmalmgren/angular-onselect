@@ -62,7 +62,8 @@ Please file a github issue for any problems or feature requests.
 
 ## Contributing
 
-Contributions are welcome via pull requests. Please adhere to the following guidelines:
- 
-  * [John Papa's Angular Style Guide](https://github.com/johnpapa/angular-styleguide)
-  * At least 90% Unit Test Coverage
+See [Contributing](CONTRIBUTING.md)
+
+## License
+
+[Licensed under MIT](LICENSE)
