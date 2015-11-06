@@ -7,9 +7,13 @@ Just do it. Please include meaningful titles and descriptions.
 ## Guidelines
 
 Contributions are welcome via pull requests. Please adhere to the following guidelines:
- 
+
   * [John Papa's Angular Style Guide](https://github.com/johnpapa/angular-styleguide)
   * At least 90% Unit Test Coverage
+  * If you want to squash an outstanding issue, bonus points for using
+    [Issue2PR](http://issue2pr.herokuapp.com/) to connect your feature branch
+    with the currently outstanding issue. This helps avoid issue/PR
+    duplication.
   * Use [the AVH version of git flow](https://github.com/petervanderdoes/gitflow-avh)
     * `git flow feature start <useful-title>`
     * Then send a pull request to `develop`
@@ -18,7 +22,7 @@ Contributions are welcome via pull requests. Please adhere to the following guid
 
 ### Cloning the Repository
 
-Nothing special here. Just follow the [standard directions](https://help.github.com/articles/fork-a-repo/). 
+Nothing special here. Just follow the [standard directions](https://help.github.com/articles/fork-a-repo/).
 
 ### Install NodeJS & NPM
 
@@ -47,7 +51,7 @@ command:
 $ npm install
 ```
 
-_Note: there aren't any bower dependencies so there is no need to do a `bower install`._ 
+_Note: there aren't any bower dependencies so there is no need to do a `bower install`._
 
 
 ### Build System
