@@ -18,6 +18,7 @@
    * @namespace RangeService
    * @memberOf onselect
    * @param {$window} $window the window object
+   * @param {$compile} $compile the compiler
    *
    * @description
    * The range service has a single method (process) for returning back data describing
@@ -25,7 +26,7 @@
    *
    * @ngInject
    */
-  function RangeService($window) {
+  function RangeService($window, $compile) {
     var service = {};
 
     service.process = process;
@@ -55,9 +56,7 @@
       }
 
       if (options.highlight) {
-        selection.highlight('span', function (node) {
-          node.style.background = 'yellow';
-        });
+        selection.highlight('<span style="background-color: yellow;"></span>');
       }
 
       return selection;
@@ -137,28 +136,26 @@
       }
 
       /**
-       * Select the current range with a new HTML Element of the given tag type. The
-       * passed decorator will be called with the created HTML Element to which it can
-       * add additional styles, classes or attributes. If the contents have already been
-       * highlighted, the previous highlighting will be removed first.
+       * Select the current range with a new HTML Element as defined by the given template. The template is evaluated
+       * by calling $compile(template). If the contents have already been highlighted, the previous highlighting will
+       * be removed first.
        *
-       * This will not work if the selected text crosses HTML nodes.  In other words, the
-       * selection must be in the same Text node.
+       * This will not work if the selected text crosses HTML nodes.  In other words, the selection must be in the
+       * same Text node.
        *
        * @memeberOf onselect.Selection
        * @name highlight
        *
-       * @param {string} tag the tag name of the element to create
-       * @param {function} decorator the function that will get called to decorate teh created element
+       * @param {string} template the HTML template
        */
-      function highlight(tag, decorator) {
+      function highlight(template) {
         if (selection._highlighter) {
           selection.removeHighlight();
         }
 
         if (range.startContainer === range.endContainer) {
-          selection._highlighter = $window.document.createElement(tag);
-          decorator(selection._highlighter);
+          var scope = angular.element(range.startContainer).scope();
+          selection._highlighter = $compile(template)(scope)[0];
 
           range.surroundContents(selection._highlighter);
         }

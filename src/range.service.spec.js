@@ -2,7 +2,7 @@
 ngDescribe({
   name: "The RangeService",
   modules: 'onSelect',
-  inject: [ 'RangeService', '$window' ],
+  inject: [ 'RangeService', '$window', '$compile', '$rootScope' ],
   mocks: {
     onSelect: {
       $window : {}
@@ -156,40 +156,44 @@ ngDescribe({
           var range = new MockRange(2, startNode, 2, endNode);
           var selection = deps.RangeService.Selection(range);
 
-          var decorator = sinon.spy();
-
           // when
-          selection.highlight('span', decorator);
+          selection.highlight('<span style="background-color:yellow;"></span>');
 
           // then
-          decorator.should.not.have.been.called;
           selection.isHighlighted().should.be.false;
         });
 
         it('should create a highlight when it can', function() {
+          // preparation
+          var _element = angular.element;
+
           // given
           var node = new MockNode('steak');
           var range = new MockRange(0, node, 5, node);
           var selection = deps.RangeService.Selection(range);
 
-          var highlighter = {};
-          deps.$window.document = { createElement: sinon.stub().returns(highlighter) };
+          var scopeCall = sinon.stub().returns(deps.$rootScope);
+          angular.element = sinon.stub().returns({ scope: scopeCall });
 
           sinon.spy(range, 'surroundContents');
 
-          var decorator = sinon.spy();
-
           // when
-          selection.highlight('span', decorator);
+          selection.highlight('<span style="background-color:yellow;"></span>');
 
           // then
-          decorator.should.have.been.calledWith(highlighter);
+          angular.element.should.have.been.called;
+          scopeCall.should.have.been.called;
           range.surroundContents.should.have.been.called;
-          deps.$window.document.createElement.should.have.been.calledWith('span');
           selection.isHighlighted().should.be.true;
+
+          // cleanup
+          angular.element = _element;
         });
 
         it('should remove an existing highlight if it exists first', function() {
+          // preparation
+          var _element = angular.element;
+
           // given
           var node = new MockNode('steak');
           var range = new MockRange(0, node, 5, node);
@@ -198,22 +202,23 @@ ngDescribe({
           selection._highlighter = true;
           selection.removeHighlight = sinon.spy();
 
-          var highlighter = {};
-          deps.$window.document = { createElement: sinon.stub().returns(highlighter) };
+          var scopeCall = sinon.stub().returns(deps.$rootScope);
+          angular.element = sinon.stub().returns({ scope: scopeCall });
 
           sinon.spy(range, 'surroundContents');
 
-          var decorator = sinon.spy();
-
           // when
-          selection.highlight('span', decorator);
+          selection.highlight('<span style="background-color:yellow;"></span>');
 
           // then
           selection.removeHighlight.should.have.been.called;
-          decorator.should.have.been.calledWith(highlighter);
+          angular.element.should.have.been.called;
+          scopeCall.should.have.been.called;
           range.surroundContents.should.have.been.called;
-          deps.$window.document.createElement.should.have.been.calledWith('span');
           selection.isHighlighted().should.be.true;
+
+          // cleanup
+          angular.element = _element;
         });
 
       });
