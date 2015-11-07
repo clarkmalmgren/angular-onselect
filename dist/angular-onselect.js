@@ -62,12 +62,12 @@
       restrict: 'A',
       scope: false,
       link: function(scope, element, attrs) {
-        element.bind('mouseup', function () {
-          var options = {
-            snapToWord: ('snapToWord' in attrs),
-            highlight: ('autoHighlight' in attrs)
-          };
+        var options = {
+          snapToWord: ('snapToWord' in attrs),
+          highlight: ('autoHighlight' in attrs)
+        };
 
+        element.bind('mouseup', function () {
           var selection = RangeService.process(options);
 
           scope.$eval(attrs.onSelect, {
@@ -99,6 +99,7 @@
    * @namespace RangeService
    * @memberOf onselect
    * @param {$window} $window the window object
+   * @param {$compile} $compile the compiler
    *
    * @description
    * The range service has a single method (process) for returning back data describing
@@ -106,7 +107,7 @@
    *
    * @ngInject
    */
-  function RangeService($window) {
+  function RangeService($window, $compile) {
     var service = {};
 
     service.process = process;
@@ -136,139 +137,136 @@
       }
 
       if (options.highlight) {
-        selection.highlight('span', function(node) {
-          node.style.background = 'yellow';
-        });
+        selection.highlight('<span style="background-color: yellow;"></span>');
       }
 
       return selection;
     }
 
-  }
-
-  /**
-   * @namespace Selection
-   * @memberOf onselect
-   * @param {Range} range the range that was surrounded
-   * @constructor
-   *
-   * @description
-   * The Selection object contains all of the behaviors for a selection including the
-   * ability to expand to word boundaries, highlight and get the text content.
-   */
-  function Selection(range) {
-    var selection = {};
-
     /**
-     * @type {Range}
-     * @desc The range
-     */
-    selection.range = range;
-
-    /**
-     * @type {Element}
-     * @desc the HTML element that was added to surround the highlighted text or undefined if none exists.
-     * @private
-     */
-    selection._highlighter = undefined;
-
-    selection.isHighlighted = isHighlighted;
-    selection.snapToWord = snapToWord;
-    selection.highlight = highlight;
-    selection.removeHighlight = removeHighlight;
-    selection.getText = getText;
-
-    return selection;
-
-    /**
-     * Returns true if this selection has already been highlighted (automatically or otherwise).
+     * @namespace Selection
+     * @memberOf onselect
+     * @param {Range} range the range that was surrounded
+     * @constructor
      *
-     * @memeberOf onselect.Selection
-     * @name isHighlighted
-     *
-     * @returns {boolean} true
+     * @description
+     * The Selection object contains all of the behaviors for a selection including the
+     * ability to expand to word boundaries, highlight and get the text content.
      */
-    function isHighlighted() {
-      return !!selection._highlighter;
-    }
+    function Selection(range) {
+      var selection = {};
 
-    /**
-     * Expand the current range so that both the beginning and end end at word boundaries.
-     *
-     * @memeberOf onselect.Selection
-     * @name snapToWord
-     */
-    function snapToWord() {
-      var start = selection.range.startOffset;
-      var startNode = selection.range.startContainer;
+      /**
+       * @type {Range}
+       * @desc The range
+       */
+      selection.range = range;
 
-      while (startNode.textContent.charAt(start) != ' ' && start > 0) {
-        start--;
-      }
-      start++;
+      /**
+       * @type {Element}
+       * @desc the HTML element that was added to surround the highlighted text or undefined if none exists.
+       * @private
+       */
+      selection._highlighter = undefined;
 
-      var end = selection.range.endOffset;
-      var endNode = selection.range.endContainer;
-      while (endNode.textContent.charAt(end) != ' ' && end < endNode.length) {
-        end++;
+      selection.isHighlighted = isHighlighted;
+      selection.snapToWord = snapToWord;
+      selection.highlight = highlight;
+      selection.removeHighlight = removeHighlight;
+      selection.getText = getText;
+
+      return selection;
+
+      /**
+       * Returns true if this selection has already been highlighted (automatically or otherwise).
+       *
+       * @memeberOf onselect.Selection
+       * @name isHighlighted
+       *
+       * @returns {boolean} true
+       */
+      function isHighlighted() {
+        return !!selection._highlighter;
       }
 
-      selection.range.setStart(startNode, start);
-      selection.range.setEnd(endNode, end);
-    }
+      /**
+       * Expand the current range so that both the beginning and end end at word boundaries.
+       *
+       * @memeberOf onselect.Selection
+       * @name snapToWord
+       */
+      function snapToWord() {
+        var start = selection.range.startOffset;
+        var startNode = selection.range.startContainer;
 
-    /**
-     * Select the current range with a new HTML Element of the given tag type. The
-     * passed decorator will be called with the created HTML Element to which it can
-     * add additional styles, classes or attributes. If the contents have already been
-     * highlighted, the previous highlighting will be removed first.
-     *
-     * This will not work if the selected text crosses HTML nodes.  In other words, the
-     * selection must be in the same Text node.
-     *
-     * @memeberOf onselect.Selection
-     * @name highlight
-     *
-     * @param {string} tag the tag name of the element to create
-     * @param {function} decorator the function that will get called to decorate teh created element
-     */
-    function highlight(tag, decorator) {
-      if (selection._highlighter) {
-        removeHighlight();
-      }
-
-      if (range.startContainer === range.endContainer) {
-        selection._highlighter = $window.document.createElement(tag);
-        decorator(selection._highlighter);
-
-        range.surroundContents(selection._highlighter);
-      }
-    }
-
-    /**
-     * Remove highlighting if it currently exists.
-     *
-     * @memeberOf onselect.Selection
-     * @name removeHighlight
-     */
-    function removeHighlight() {
-      if (selection._highlighter) {
-        var parent = selection._highlighter.parentNode;
-        while (selection._highlighter.firstChild) {
-          parent.insertBefore(selection._highlighter.firstChild, selection._highlighter);
+        while (startNode.textContent.charAt(start) != ' ' && start > 0) {
+          start--;
         }
-        parent.removeChild(selection._highlighter);
-        selection._highlighter = undefined;
-      }
-    }
+        if (start != 0 && start != selection.range.startOffset) {
+          start++;
+        }
 
-    /**
-     * Return the text contents of the currently highlighted range.
-     *
-     * @returns {string}
-     */
-    function getText() {
-      return range.toString();
+        var end = selection.range.endOffset;
+        var endNode = selection.range.endContainer;
+        while (endNode.textContent.charAt(end) != ' ' && end < endNode.length) {
+          end++;
+        }
+
+        selection.range.setStart(startNode, start);
+        selection.range.setEnd(endNode, end);
+      }
+
+      /**
+       * Select the current range with a new HTML Element as defined by the given template. The template is evaluated
+       * by calling $compile(template). If the contents have already been highlighted, the previous highlighting will
+       * be removed first.
+       *
+       * This will not work if the selected text crosses HTML nodes.  In other words, the selection must be in the
+       * same Text node.
+       *
+       * @memeberOf onselect.Selection
+       * @name highlight
+       *
+       * @param {string} template the HTML template
+       */
+      function highlight(template) {
+        if (selection._highlighter) {
+          selection.removeHighlight();
+        }
+
+        if (range.startContainer === range.endContainer) {
+          var scope = angular.element(range.startContainer).scope();
+          selection._highlighter = $compile(template)(scope)[0];
+
+          range.surroundContents(selection._highlighter);
+        }
+      }
+
+      /**
+       * Remove highlighting if it currently exists.
+       *
+       * @memeberOf onselect.Selection
+       * @name removeHighlight
+       */
+      function removeHighlight() {
+        if (selection._highlighter) {
+          var parent = selection._highlighter.parentNode;
+          while (selection._highlighter.firstChild) {
+            parent.insertBefore(selection._highlighter.firstChild, selection._highlighter);
+          }
+          parent.removeChild(selection._highlighter);
+          selection._highlighter = undefined;
+        }
+      }
+
+      /**
+       * Return the text contents of the currently highlighted range.
+       *
+       * @returns {string}
+       */
+      function getText() {
+        return range.toString();
+      }
     }
   }
 
