@@ -1,0 +1,19 @@
+{
+  "name": "angular-onselect-docs",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "dev-dependencies": {
+    "gulp-concat": "^2.6.0",
+    "gulp": "^3.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clarkmalmgren/angular-onselect.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clarkmalmgren/angular-onselect/issues"
+  },
+  "homepage": "http://clarkmalmgren.github.io/angular-onselect/"
+}

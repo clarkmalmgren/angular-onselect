@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="en-us" ng-app="onSelectExample">
   <head>
     <meta charset="UTF-8">
     <title>Angular On Select by clarkmalmgren</title>
@@ -8,6 +8,9 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+    <script src="app.js"></script>
+    <script src="demo.js"></script>
   </head>
   <body>
     <section class="page-header">
@@ -22,12 +25,41 @@
       <h1>
 <a id="angular-on-select-directive" class="anchor" href="#angular-on-select-directive" aria-hidden="true"><span class="octicon octicon-link"></span></a>Angular On Select Directive</h1>
 
-<p><a href=""><img src="https://img.shields.io/badge/license-mit-green.svg" alt="license:mit"></a><br>
-<a href=""><img src="https://img.shields.io/travis/clarkmalmgren/angular-onselect.svg" alt="Travis"></a><br>
-<a href=""><img src="https://img.shields.io/coveralls/clarkmalmgren/angular-onselect.svg" alt="Coveralls"></a><br>
-<a href=""><img src="https://img.shields.io/npm/dt/angular-onselect.svg" alt="npm"></a><br>
-<a href=""><img src="https://img.shields.io/npm/v/angular-onselect.svg" alt="npm"></a><br>
+<p><a href=""><img src="https://img.shields.io/badge/license-mit-green.svg" alt="license:mit"></a>
+<a href=""><img src="https://img.shields.io/travis/clarkmalmgren/angular-onselect.svg" alt="Travis"></a>
+<a href=""><img src="https://img.shields.io/coveralls/clarkmalmgren/angular-onselect.svg" alt="Coveralls"></a>
+<a href=""><img src="https://img.shields.io/npm/dt/angular-onselect.svg" alt="npm"></a>
+<a href=""><img src="https://img.shields.io/npm/v/angular-onselect.svg" alt="npm"></a>
 <a href=""><img src="https://img.shields.io/bower/v/angular-onselect.svg" alt="Bower"></a></p>
+
+
+<h2>
+  <a id="live-demo" class="anchor" href="#live-demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Live Demo</h2>
+
+<div class="panel" ng-controller="ExampleController as vm">
+  <div ng-if="vm.lastSelectedText">
+    <h4>You have selected the following text:</h4>
+    <p>{{vm.lastSelectedText}}</p>
+  </div>
+  <div ng-if="!vm.lastSelectedText">
+    <h4>You haven't yet selected any text</h4>
+  </div>
+
+  <hr>
+
+  <div on-select="vm.doStuff(selection);" snap-to-word auto-highlight>
+    <p>
+      Bacon ipsum dolor amet ut beef ribs culpa alcatra cupidatat bacon sint dolor ipsum. Pork loin picanha nisi leberkas sausage. Pork chop consequat boudin, rump duis sausage ut cow swine ham alcatra dolor. Consectetur strip steak ham proident fugiat short loin voluptate officia boudin.
+    </p>
+    <p>
+      Deserunt est tongue, capicola officia short loin kielbasa corned beef in eu leberkas veniam cow ut ut. Cow sint magna, drumstick bacon turkey dolore aute ea pariatur. Esse fugiat cow anim boudin beef ribs. Aliquip esse proident, exercitation elit anim ut ball tip in beef mollit porchetta. Ea frankfurter aliquip, short loin voluptate velit reprehenderit. Nisi nostrud esse jowl alcatra.
+    </p>
+  </div>
+</div>
+
+
+      <h2>
+  <a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h2>
 
 <p>Directive that allows for click-and-drag or just a click for highlighting words within any container
 regardless of type. The <code>on-select</code> attribute value is evaluated whenever a word or a group of words
@@ -44,7 +76,7 @@ If snap-to-word is turned on, simply clicking on a word is the same as highlight
 <a id="example-usage" class="anchor" href="#example-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Usage</h2>
 
 <p>The below example shows how to use <code>on-select</code> to automatically highlight a word and then after <code>2000ms</code> the highlight
-is removed. This is actually demoed in <code>example/index.html</code>.</p>
+is removed. This is actually demoed in the <a href="#live-demo">Live Demo</a> selection at the top of the page.</p>
 
 <div class="highlight highlight-source-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>example<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>onSelect<span class="pl-pds">'</span></span>])
   .controller(<span class="pl-s"><span class="pl-pds">'</span>ExampleController<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>() {
@@ -79,15 +111,8 @@ $ bower install --save angular-onselect</pre></div>
 
 <p>Please file a github issue for any problems or feature requests.</p>
 
-<h2>
-<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-<p>See <a href="CONTRIBUTING.md">Contributing</a></p>
 
-<h2>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
-
-<p><a href="LICENSE">Licensed under MIT</a></p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/clarkmalmgren/angular-onselect">Angular On Select</a> is maintained by <a href="https://github.com/clarkmalmgren">clarkmalmgren</a>.</span>

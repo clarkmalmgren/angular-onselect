@@ -1,0 +1,23 @@
+{
+  "name": "angular-onselect-docs",
+  "description": "",
+  "authors": [
+    "Clark Malmgren <cmalmgren@grubhub.com>"
+  ],
+  "license": "MIT",
+  "homepage": "http://clarkmalmgren.github.io/angular-onselect/",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-onselect": "~0.0.2",
+    "bootstrap": "~3.3.5"
+  }
+}
