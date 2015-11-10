@@ -162,6 +162,7 @@
           range.surroundContents(selection._highlighter);
           return true;
         } catch (e) {
+          selection.removeHighlight();
           return false;
         }
       }

@@ -149,18 +149,32 @@ ngDescribe({
 
       describe('highlight function', function() {
 
-        it('should not create a selection if the start and end nodes are different', function() {
+        it('should not create a selection if surround throws an error', function() {
+          // preparation
+          var _element = angular.element;
+
           // given
-          var startNode = new MockNode('beef');
-          var endNode = new MockNode('steak');
-          var range = new MockRange(2, startNode, 2, endNode);
+          var node = new MockNode('steak');
+          var range = new MockRange(0, node, 5, node);
           var selection = deps.RangeService.Selection(range);
 
+          var scopeCall = sinon.stub().returns(deps.$rootScope);
+          angular.element = sinon.stub().returns({ scope: scopeCall });
+
+          sinon.stub(range, 'surroundContents').throws();
+
           // when
-          selection.highlight('<span style="background-color:yellow;"></span>');
+          var worked = selection.highlight('<span style="background-color:yellow;"></span>');
 
           // then
+          worked.should.be.false;
+          angular.element.should.have.been.called;
+          scopeCall.should.have.been.called;
+          range.surroundContents.should.have.been.called;
           selection.isHighlighted().should.be.false;
+
+          // cleanup
+          angular.element = _element;
         });
 
         it('should create a highlight when it can', function() {
@@ -178,9 +192,10 @@ ngDescribe({
           sinon.spy(range, 'surroundContents');
 
           // when
-          selection.highlight('<span style="background-color:yellow;"></span>');
+          var worked = selection.highlight('<span style="background-color:yellow;"></span>');
 
           // then
+          worked.should.be.true;
           angular.element.should.have.been.called;
           scopeCall.should.have.been.called;
           range.surroundContents.should.have.been.called;
