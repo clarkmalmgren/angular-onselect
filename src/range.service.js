@@ -147,17 +147,22 @@
        * @name highlight
        *
        * @param {string} template the HTML template
+       *
+       * @return {boolean} indicates whether or not the highlight was able to be created
        */
       function highlight(template) {
         if (selection._highlighter) {
           selection.removeHighlight();
         }
 
-        if (range.startContainer === range.endContainer) {
+        try {
           var scope = angular.element(range.startContainer).scope();
           selection._highlighter = $compile(template)(scope)[0];
 
           range.surroundContents(selection._highlighter);
+          return true;
+        } catch (e) {
+          return false;
         }
       }
 
