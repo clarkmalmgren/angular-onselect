@@ -15,54 +15,72 @@
 </head>
 <body ng-controller="ExampleController as vm">
 
+
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        Angular On Select Demo
+      </a>
+    </div>
+  </div>
+</nav>
+
 <div class="container">
 
-  <div ng-if="vm.lastSelectedText">
-    <h1>You have selected the following text:</h1>
-    <p>{{vm.lastSelectedText}}</p>
+  <div class="col-sm-7 col-xs-12 panel panel-default">
+    <div class="panel-body" on-select="vm.doStuff(selection);" snap-to-word>
+      <h1>Select Anything:</h1>
+
+      <p>
+        Bacon ipsum dolor amet ut beef ribs culpa alcatra cupidatat bacon sint dolor ipsum. Pork loin picanha nisi
+        leberkas sausage. Pork chop consequat boudin, rump duis sausage ut cow swine ham alcatra dolor. Consectetur strip
+        steak ham proident fugiat short loin voluptate officia boudin.
+      </p>
+
+      <p>
+        Deserunt est tongue, capicola officia short loin kielbasa corned beef in eu leberkas veniam cow ut ut. Cow sint
+        magna, drumstick bacon turkey dolore aute ea pariatur. Esse fugiat cow anim boudin beef ribs. Aliquip esse
+        proident, exercitation elit anim ut ball tip in beef mollit porchetta. Ea frankfurter aliquip, short loin
+        voluptate velit reprehenderit. Nisi nostrud esse jowl alcatra.
+      </p>
+
+      <p>
+        Alcatra corned beef cupim fugiat, pork esse biltong elit ut officia andouille kielbasa tempor in meatball. Et
+        labore ad occaecat, exercitation pork chop ullamco ut ut swine chicken fugiat. Pork magna nostrud pork belly,
+        minim adipisicing meatball. Ullamco in mollit picanha nulla, pork chop beef est. Deserunt rump excepteur ut, sunt
+        meatloaf commodo ipsum elit hamburger velit anim labore. Ground round pancetta occaecat, biltong tongue laborum
+        dolore strip steak. Chicken frankfurter spare ribs ball tip pork occaecat cupim in corned beef.
+      </p>
+
+      <p>
+        Hamburger occaecat in, tenderloin landjaeger short loin minim. Excepteur cupidatat landjaeger culpa frankfurter
+        shank shoulder. Ribeye pork chop qui boudin turkey short ribs ut deserunt aliqua strip steak t-bone drumstick
+        officia. Nisi tongue veniam beef chuck aliquip strip steak ground round deserunt, biltong drumstick sunt fugiat.
+      </p>
+
+      <p>
+        Prosciutto pork pastrami shank capicola corned beef tri-tip venison strip steak duis ex. Do ut filet mignon
+        meatloaf dolor culpa id. Strip steak cupim occaecat deserunt biltong duis consequat pancetta, irure prosciutto.
+        Cillum leberkas boudin alcatra meatball in, deserunt kevin est fatback reprehenderit nostrud. Nisi occaecat pork
+        loin est, exercitation nulla in. Kielbasa dolore commodo ut, tail shoulder meatloaf deserunt aliquip landjaeger
+        qui ribeye frankfurter non. Enim andouille shank picanha cupim tenderloin meatloaf do officia laborum tail
+        exercitation short loin commodo.
+      </p>
+    </div>
   </div>
-  <div ng-if="!vm.lastSelectedText">
-    <h1>You haven't yet selected any text</h1>
-  </div>
 
-  <hr>
+  <div class="col-sm-4 col-sm-offset-1 col-xs-12 panel panel-default">
+    <div class="panel-body">
 
-  <div on-select="vm.doStuff(selection);" snap-to-word auto-highlight>
-    <p>
-      Bacon ipsum dolor amet ut beef ribs culpa alcatra cupidatat bacon sint dolor ipsum. Pork loin picanha nisi
-      leberkas sausage. Pork chop consequat boudin, rump duis sausage ut cow swine ham alcatra dolor. Consectetur strip
-      steak ham proident fugiat short loin voluptate officia boudin.
-    </p>
+      <div>
+        <h1>Selected:</h1>
+        <div class="well">
+          {{vm.lastSelectedText || 'nothing'}}
+        </div>
+      </div>
 
-    <p>
-      Deserunt est tongue, capicola officia short loin kielbasa corned beef in eu leberkas veniam cow ut ut. Cow sint
-      magna, drumstick bacon turkey dolore aute ea pariatur. Esse fugiat cow anim boudin beef ribs. Aliquip esse
-      proident, exercitation elit anim ut ball tip in beef mollit porchetta. Ea frankfurter aliquip, short loin
-      voluptate velit reprehenderit. Nisi nostrud esse jowl alcatra.
-    </p>
-
-    <p>
-      Alcatra corned beef cupim fugiat, pork esse biltong elit ut officia andouille kielbasa tempor in meatball. Et
-      labore ad occaecat, exercitation pork chop ullamco ut ut swine chicken fugiat. Pork magna nostrud pork belly,
-      minim adipisicing meatball. Ullamco in mollit picanha nulla, pork chop beef est. Deserunt rump excepteur ut, sunt
-      meatloaf commodo ipsum elit hamburger velit anim labore. Ground round pancetta occaecat, biltong tongue laborum
-      dolore strip steak. Chicken frankfurter spare ribs ball tip pork occaecat cupim in corned beef.
-    </p>
-
-    <p>
-      Hamburger occaecat in, tenderloin landjaeger short loin minim. Excepteur cupidatat landjaeger culpa frankfurter
-      shank shoulder. Ribeye pork chop qui boudin turkey short ribs ut deserunt aliqua strip steak t-bone drumstick
-      officia. Nisi tongue veniam beef chuck aliquip strip steak ground round deserunt, biltong drumstick sunt fugiat.
-    </p>
-
-    <p>
-      Prosciutto pork pastrami shank capicola corned beef tri-tip venison strip steak duis ex. Do ut filet mignon
-      meatloaf dolor culpa id. Strip steak cupim occaecat deserunt biltong duis consequat pancetta, irure prosciutto.
-      Cillum leberkas boudin alcatra meatball in, deserunt kevin est fatback reprehenderit nostrud. Nisi occaecat pork
-      loin est, exercitation nulla in. Kielbasa dolore commodo ut, tail shoulder meatloaf deserunt aliquip landjaeger
-      qui ribeye frankfurter non. Enim andouille shank picanha cupim tenderloin meatloaf do officia laborum tail
-      exercitation short loin commodo.
-    </p>
+    </div>
   </div>
 
 </div>

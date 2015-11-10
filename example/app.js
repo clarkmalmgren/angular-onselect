@@ -15,9 +15,8 @@
     function doStuff(selection) {
       vm.lastSelectedText = selection.getText();
 
-      if (selection.isHighlighted()) {
-        setTimeout(selection.removeHighlight, 2000);
-      }
+      selection.highlight('<span class="label label-info"><strong></strong></span>');
+      setTimeout(selection.removeHighlight, 2000);
 
       $scope.$apply();
     }
