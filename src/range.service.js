@@ -155,16 +155,63 @@
           selection.removeHighlight();
         }
 
-        try {
-          var scope = angular.element(range.startContainer).scope();
-          selection._highlighter = $compile(template)(scope)[0];
+        var ranges = shard();
+        selection._highlighter = [];
 
-          range.surroundContents(selection._highlighter);
-          return true;
-        } catch (e) {
-          selection.removeHighlight();
-          return false;
+        for (var r in ranges) {
+          var subrange = ranges[r];
+
+          var scope = angular.element(range.startContainer).scope();
+          var highlighter = $compile(template)(scope)[0];
+          subrange.surroundContents(highlighter);
+          selection._highlighter.push(highlighter);
         }
+
+        return selection._highlighter;
+      }
+
+      function shard() {
+        var treeNode = new RangeTreeNode();
+
+        treeNode.setStart(range.startContainer, range.startOffset);
+        var current = range.startContainer;
+        var distance = 0;
+
+        while (current != range.endContainer && distance < 50) {
+          var last = current;
+
+          if (current.firstChild) {
+            console.log('Step[' + distance + ']: Child');
+            current = current.firstChild;
+
+            treeNode.setEnd(last, last.length - 1);
+            treeNode = treeNode.createNewChild();
+          } else if (current.nextSibling) {
+            console.log('Step[' + distance + ']: Sibling');
+            current = current.nextSibling;
+
+            if (current.nodeType != 3) {
+              treeNode.setEnd(last, last.length - 1);
+              treeNode = treeNode.getNextSibling();
+            }
+          } else if (current.parentNode.nextSibling) {
+            console.log('Step[' + distance + ']: Aunt');
+
+            current = current.parentNode.nextSibling;
+            treeNode.setEnd(last, last.length - 1);
+            treeNode = treeNode.getParent().getNextSibling();
+          }
+
+          if (current.nodeType == 3 && !treeNode.start) {
+            treeNode.setStart(current, 0);
+          }
+
+          distance++;
+        }
+
+        treeNode.setEnd(range.endContainer, range.endOffset );
+
+        return treeNode.toRanges();
       }
 
       /**
@@ -174,14 +221,17 @@
        * @name removeHighlight
        */
       function removeHighlight() {
-        if (selection._highlighter) {
-          var parent = selection._highlighter.parentNode;
-          while (selection._highlighter.firstChild) {
-            parent.insertBefore(selection._highlighter.firstChild, selection._highlighter);
+        for (var h in selection._highlighter) {
+          var highlighter = selection._highlighter[h];
+
+          var parent = highlighter.parentNode;
+          while (highlighter.firstChild) {
+            parent.insertBefore(highlighter.firstChild, highlighter);
           }
-          parent.removeChild(selection._highlighter);
-          selection._highlighter = undefined;
+          parent.removeChild(highlighter);
         }
+
+        selection._highlighter = undefined;
       }
 
       /**
@@ -193,6 +243,57 @@
         return range.toString();
       }
     }
+  }
+
+  function RangeTreeNode(parent) {
+    this.parent = parent;
+    this.start = undefined;
+    this.end = undefined;
+    this.children = [];
+  }
+  RangeTreeNode.prototype.setStart = function(node, index) {
+    this.start = {node: node, index: index};
+  };
+  RangeTreeNode.prototype.setEnd = function(node, index) {
+    this.end = {node: node, index: index};
+  };
+  RangeTreeNode.prototype.getParent = function() {
+    if (!this.parent) {
+      this.parent = new RangeTreeNode();
+      this.parent.children.push(this);
+    }
+    return this.parent;
+  };
+  RangeTreeNode.prototype.createNewChild = function() {
+    var child = new RangeTreeNode(this);
+    this.children.push(child);
+    return child;
+  };
+  RangeTreeNode.prototype.getNextSibling = function() {
+    return this.getParent().createNewChild();
+  };
+  RangeTreeNode.prototype.toRanges = function() {
+    var top = this;
+    while (top.parent) {
+      top = top.parent;
+    }
+    return _toRangesRecursive(top, []);
+  };
+
+  function _toRangesRecursive(node, list) {
+    if (node.start && node.end) {
+      var range = document.createRange();
+      range.setStart(node.start.node, node.start.index);
+      range.setEnd(node.end.node, node.end.index);
+
+      list.push(range);
+    }
+
+    for (var c in node.children) {
+      _toRangesRecursive(node.children[c], list);
+    }
+
+    return list;
   }
 
 })();
