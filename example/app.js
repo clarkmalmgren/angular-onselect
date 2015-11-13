@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
 
   angular.module('onSelectExample', ['onSelect'])
     .controller('ExampleController', ExampleController);
@@ -15,7 +16,7 @@
     function doStuff(selection) {
       vm.lastSelectedText = selection.getText();
 
-      selection.highlight('<span class="label label-info"><strong></strong></span>');
+      selection.highlight('<span class="label label-info"></span>');
       setTimeout(selection.removeHighlight, 2000);
 
       $scope.$apply();

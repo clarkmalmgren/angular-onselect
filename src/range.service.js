@@ -26,13 +26,15 @@
    *
    * @ngInject
    */
-  function RangeService($window, $compile) {
+  function RangeService($window, $compile, $document) {
     var service = {};
 
+    service.disabled = false;
     service.process = process;
     service.Selection = Selection;
 
-    return service;
+    // TODO: Fix this
+    //return service;
 
     /**
      * @mamberOf onselect.RangeService
@@ -46,6 +48,10 @@
      * options as well.
      */
     function process(options) {
+      if (service.disabled) {
+        return;
+      }
+
       var windowSelection = $window.getSelection();
       var range = windowSelection.getRangeAt(0);
 
@@ -249,85 +255,89 @@
         return treeNode.toRanges();
       }
     }
-  }
 
-  /**
-   * @namespace RangeTreeNode
-   * @memberOf onselect
-   * @param {onselect.RangeTreeNode} parent
-   * @constructor
-   *
-   * @description
-   * Directed graph node implementation for storing and handling the hierarchy associated with traversing a complex
-   * DOM structure for determining what can and can't be highlighted.
-   */
-  function RangeTreeNode(parent) {
 
-    /** @type {onselect.RangeTreeNode} */
-    this.parent = parent;
 
-    /** @type {{node: Node, index: number}} */
-    this.start = undefined;
+    /**
+     * @namespace RangeTreeNode
+     * @memberOf onselect
+     * @param {onselect.RangeTreeNode} parent
+     * @constructor
+     *
+     * @description
+     * Directed graph node implementation for storing and handling the hierarchy associated with traversing a complex
+     * DOM structure for determining what can and can't be highlighted.
+     */
+    function RangeTreeNode(parent) {
 
-    /** @type {{node: Node, index: number}} */
-    this.end = undefined;
+      /** @type {onselect.RangeTreeNode} */
+      this.parent = parent;
 
-    /** @type {[onselect.RangeTreeNode]} */
-    this.children = [];
-  }
+      /** @type {{node: Node, index: number}} */
+      this.start = undefined;
 
-  /**
-   * @memberOf onselect.RangeTreeNode
-   * @name setStart
-   * @param {Node} node
-   * @param {number} index
-   *
-   * @description
-   *
-   */
-  RangeTreeNode.prototype.setStart = function(node, index) {
-    this.start = {node: node, index: index};
-  };
-  RangeTreeNode.prototype.setEnd = function(node, index) {
-    this.end = {node: node, index: index};
-  };
-  RangeTreeNode.prototype.getParent = function() {
-    if (!this.parent) {
-      this.parent = new RangeTreeNode();
-      this.parent.children.push(this);
-    }
-    return this.parent;
-  };
-  RangeTreeNode.prototype.createNewChild = function() {
-    var child = new RangeTreeNode(this);
-    this.children.push(child);
-    return child;
-  };
-  RangeTreeNode.prototype.getNextSibling = function() {
-    return this.getParent().createNewChild();
-  };
-  RangeTreeNode.prototype.toRanges = function() {
-    var top = this;
-    while (top.parent) {
-      top = top.parent;
-    }
-    return _toRangesRecursive(top, []);
-  };
+      /** @type {{node: Node, index: number}} */
+      this.end = undefined;
 
-  function _toRangesRecursive(node, list) {
-    if (node.start && node.end) {
-      var range = document.createRange();
-      range.setStart(node.start.node, node.start.index);
-      range.setEnd(node.end.node, node.end.index);
-
-      list.push(range);
+      /** @type {[onselect.RangeTreeNode]} */
+      this.children = [];
     }
 
-    for (var c in node.children) {
-      _toRangesRecursive(node.children[c], list);
+    /**
+     * @memberOf onselect.RangeTreeNode
+     * @name setStart
+     * @param {Node} node
+     * @param {number} index
+     *
+     * @description
+     *
+     */
+    RangeTreeNode.prototype.setStart = function(node, index) {
+      this.start = {node: node, index: index};
+    };
+    RangeTreeNode.prototype.setEnd = function(node, index) {
+      this.end = {node: node, index: index};
+    };
+    RangeTreeNode.prototype.getParent = function() {
+      if (!this.parent) {
+        this.parent = new RangeTreeNode();
+        this.parent.children.push(this);
+      }
+      return this.parent;
+    };
+    RangeTreeNode.prototype.createNewChild = function() {
+      var child = new RangeTreeNode(this);
+      this.children.push(child);
+      return child;
+    };
+    RangeTreeNode.prototype.getNextSibling = function() {
+      return this.getParent().createNewChild();
+    };
+    RangeTreeNode.prototype.toRanges = function() {
+      var top = this;
+      while (top.parent) {
+        top = top.parent;
+      }
+      return _toRangesRecursive(top, []);
+    };
+
+    function _toRangesRecursive(node, list) {
+      if (node.start && node.end) {
+        var range = $window.document.createRange();
+        range.setStart(node.start.node, node.start.index);
+        range.setEnd(node.end.node, node.end.index);
+
+        list.push(range);
+      }
+
+      for (var c in node.children) {
+        _toRangesRecursive(node.children[c], list);
+      }
+
+      return list;
     }
 
-    return list;
+    return service;
   }
 
 })();
