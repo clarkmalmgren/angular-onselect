@@ -170,50 +170,6 @@
         return selection._highlighter;
       }
 
-      function shard() {
-        var treeNode = new RangeTreeNode();
-
-        treeNode.setStart(range.startContainer, range.startOffset);
-        var current = range.startContainer;
-        var distance = 0;
-
-        while (current != range.endContainer && distance < 50) {
-          var last = current;
-
-          if (current.firstChild) {
-            console.log('Step[' + distance + ']: Child');
-            current = current.firstChild;
-
-            treeNode.setEnd(last, last.length - 1);
-            treeNode = treeNode.createNewChild();
-          } else if (current.nextSibling) {
-            console.log('Step[' + distance + ']: Sibling');
-            current = current.nextSibling;
-
-            if (current.nodeType != 3) {
-              treeNode.setEnd(last, last.length - 1);
-              treeNode = treeNode.getNextSibling();
-            }
-          } else if (current.parentNode.nextSibling) {
-            console.log('Step[' + distance + ']: Aunt');
-
-            current = current.parentNode.nextSibling;
-            treeNode.setEnd(last, last.length - 1);
-            treeNode = treeNode.getParent().getNextSibling();
-          }
-
-          if (current.nodeType == 3 && !treeNode.start) {
-            treeNode.setStart(current, 0);
-          }
-
-          distance++;
-        }
-
-        treeNode.setEnd(range.endContainer, range.endOffset );
-
-        return treeNode.toRanges();
-      }
-
       /**
        * Remove highlighting if it currently exists.
        *
@@ -242,15 +198,93 @@
       function getText() {
         return range.toString();
       }
+
+      /**
+       * Split the current range into ranges that can actually be highlighted. This is required for doing complex
+       * DOM highlights where the highlight HTML node would need to only partially include a non-text node.
+       *
+       * @memberOf onselect.Selection
+       * @name shard
+       *
+       * @return {[Range]} the array of ranges
+       */
+      function shard() {
+        var treeNode = new RangeTreeNode();
+
+        treeNode.setStart(range.startContainer, range.startOffset);
+        var current = range.startContainer;
+        var distance = 0;
+
+        while (current != range.endContainer && distance < 50) {
+          var last = current;
+
+          if (current.firstChild) {
+            current = current.firstChild;
+
+            treeNode.setEnd(last, last.length - 1);
+            treeNode = treeNode.createNewChild();
+          } else if (current.nextSibling) {
+            current = current.nextSibling;
+
+            if (current.nodeType != 3) {
+              treeNode.setEnd(last, last.length - 1);
+              treeNode = treeNode.getNextSibling();
+            }
+          } else if (current.parentNode.nextSibling) {
+
+            current = current.parentNode.nextSibling;
+            treeNode.setEnd(last, last.length - 1);
+            treeNode = treeNode.getParent().getNextSibling();
+          }
+
+          if (current.nodeType == 3 && !treeNode.start) {
+            treeNode.setStart(current, 0);
+          }
+
+          distance++;
+        }
+
+        treeNode.setEnd(range.endContainer, range.endOffset );
+
+        return treeNode.toRanges();
+      }
     }
   }
 
+  /**
+   * @namespace RangeTreeNode
+   * @memberOf onselect
+   * @param {onselect.RangeTreeNode} parent
+   * @constructor
+   *
+   * @description
+   * Directed graph node implementation for storing and handling the hierarchy associated with traversing a complex
+   * DOM structure for determining what can and can't be highlighted.
+   */
   function RangeTreeNode(parent) {
+
+    /** @type {onselect.RangeTreeNode} */
     this.parent = parent;
+
+    /** @type {{node: Node, index: number}} */
     this.start = undefined;
+
+    /** @type {{node: Node, index: number}} */
     this.end = undefined;
+
+    /** @type {[onselect.RangeTreeNode]} */
     this.children = [];
   }
+
+  /**
+   * @memberOf onselect.RangeTreeNode
+   * @name setStart
+   * @param {Node} node
+   * @param {number} index
+   *
+   * @description
+   *
+   */
   RangeTreeNode.prototype.setStart = function(node, index) {
     this.start = {node: node, index: index};
   };
