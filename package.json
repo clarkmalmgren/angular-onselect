@@ -1,6 +1,6 @@
 {
   "name": "angular-onselect",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generic event handler for selecting text regardless of element type",
   "main": "dist/angular-onselect.js",
   "scripts": {

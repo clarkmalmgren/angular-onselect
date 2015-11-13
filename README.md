@@ -1,10 +1,10 @@
 # Angular On Select Directive
 
-[![license:mit](https://img.shields.io/badge/license-mit-green.svg)]()<br>
-[![Travis](https://img.shields.io/travis/clarkmalmgren/angular-onselect.svg)]()<br>
-[![Coveralls](https://img.shields.io/coveralls/clarkmalmgren/angular-onselect.svg)]()<br>
-[![npm](https://img.shields.io/npm/dt/angular-onselect.svg)]()<br>
-[![npm](https://img.shields.io/npm/v/angular-onselect.svg)]()<br>
+[![license:mit](https://img.shields.io/badge/license-mit-green.svg)]()
+[![Travis](https://img.shields.io/travis/clarkmalmgren/angular-onselect.svg)]()
+[![Coveralls](https://img.shields.io/coveralls/clarkmalmgren/angular-onselect.svg)]()
+[![npm](https://img.shields.io/npm/dt/angular-onselect.svg)]()
+[![npm](https://img.shields.io/npm/v/angular-onselect.svg)]()
 [![Bower](https://img.shields.io/bower/v/angular-onselect.svg)]()
 
 Directive that allows for click-and-drag or just a click for highlighting words within any container
@@ -21,7 +21,7 @@ If snap-to-word is turned on, simply clicking on a word is the same as highlight
 ## Example Usage
 
 The below example shows how to use `on-select` to automatically highlight a word and then after `2000ms` the highlight
-is removed. This is actually demoed in `example/index.html`.
+is removed. This is a running demo [here](http://clarkmalmgren.github.io/angular-onselect/).
 
 ```javascript
 angular.module('example', ['onSelect'])

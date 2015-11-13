@@ -2,10 +2,12 @@
 ngDescribe({
   name: "The RangeService",
   modules: 'onSelect',
-  inject: [ 'RangeService', '$window', '$compile', '$rootScope' ],
+  inject: [ 'RangeService', '$window', '$compile', '$rootScope'],
   mocks: {
     onSelect: {
-      $window : {}
+      $window : {
+        document : {}
+      }
     }
   },
   tests: function(deps) {
@@ -149,19 +151,33 @@ ngDescribe({
 
       describe('highlight function', function() {
 
-        it('should not create a selection if the start and end nodes are different', function() {
-          // given
-          var startNode = new MockNode('beef');
-          var endNode = new MockNode('steak');
-          var range = new MockRange(2, startNode, 2, endNode);
-          var selection = deps.RangeService.Selection(range);
-
-          // when
-          selection.highlight('<span style="background-color:yellow;"></span>');
-
-          // then
-          selection.isHighlighted().should.be.false;
-        });
+        //it('should not create a selection if surround throws an error', function() {
+        //  // preparation
+        //  var _element = angular.element;
+        //
+        //  // given
+        //  var node = new MockNode('steak');
+        //  var range = new MockRange(0, node, 5, node);
+        //  var selection = deps.RangeService.Selection(range);
+        //
+        //  var scopeCall = sinon.stub().returns(deps.$rootScope);
+        //  angular.element = sinon.stub().returns({ scope: scopeCall });
+        //
+        //  sinon.stub(range, 'surroundContents').throws();
+        //
+        //  // when
+        //  var worked = selection.highlight('<span style="background-color:yellow;"></span>');
+        //
+        //  // then
+        //  worked.should.be.false;
+        //  angular.element.should.have.been.called;
+        //  scopeCall.should.have.been.called;
+        //  range.surroundContents.should.have.been.called;
+        //  selection.isHighlighted().should.be.false;
+        //
+        //  // cleanup
+        //  angular.element = _element;
+        //});
 
         it('should create a highlight when it can', function() {
           // preparation
@@ -170,20 +186,24 @@ ngDescribe({
           // given
           var node = new MockNode('steak');
           var range = new MockRange(0, node, 5, node);
+          var otherRange = new MockRange();
           var selection = deps.RangeService.Selection(range);
 
           var scopeCall = sinon.stub().returns(deps.$rootScope);
           angular.element = sinon.stub().returns({ scope: scopeCall });
 
-          sinon.spy(range, 'surroundContents');
+          deps.$window.document.createRange = sinon.stub().returns(otherRange);
+
+          sinon.spy(otherRange, 'surroundContents');
 
           // when
-          selection.highlight('<span style="background-color:yellow;"></span>');
+          var worked = selection.highlight('<span style="background-color:yellow;"></span>');
 
           // then
+          worked.should.be.truthy;
           angular.element.should.have.been.called;
           scopeCall.should.have.been.called;
-          range.surroundContents.should.have.been.called;
+          otherRange.surroundContents.should.have.been.called;
           selection.isHighlighted().should.be.true;
 
           // cleanup
@@ -197,24 +217,28 @@ ngDescribe({
           // given
           var node = new MockNode('steak');
           var range = new MockRange(0, node, 5, node);
+          var otherRange = new MockRange();
           var selection = deps.RangeService.Selection(range);
 
           selection._highlighter = true;
           selection.removeHighlight = sinon.spy();
 
+          deps.$window.document.createRange = sinon.stub().returns(otherRange);
+
           var scopeCall = sinon.stub().returns(deps.$rootScope);
           angular.element = sinon.stub().returns({ scope: scopeCall });
 
-          sinon.spy(range, 'surroundContents');
+          sinon.spy(otherRange, 'surroundContents');
 
           // when
-          selection.highlight('<span style="background-color:yellow;"></span>');
+          var worked = selection.highlight('<span style="background-color:yellow;"></span>');
 
           // then
           selection.removeHighlight.should.have.been.called;
+          worked.should.be.truthy;
           angular.element.should.have.been.called;
           scopeCall.should.have.been.called;
-          range.surroundContents.should.have.been.called;
+          otherRange.surroundContents.should.have.been.called;
           selection.isHighlighted().should.be.true;
 
           // cleanup
@@ -248,7 +272,7 @@ ngDescribe({
           }
         };
 
-        selection._highlighter = highlighter;
+        selection._highlighter = [highlighter];
 
         // when
         selection.removeHighlight();
