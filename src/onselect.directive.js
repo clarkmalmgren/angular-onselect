@@ -57,6 +57,10 @@
         };
 
         element.bind('mouseup', function () {
+          if (RangeService.disabled) {
+            return;
+          }
+
           var selection = RangeService.process(options);
 
           scope.$eval(attrs.onSelect, {

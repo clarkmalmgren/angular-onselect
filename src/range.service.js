@@ -33,8 +33,7 @@
     service.process = process;
     service.Selection = Selection;
 
-    // TODO: Fix this
-    //return service;
+    return service;
 
     /**
      * @mamberOf onselect.RangeService
@@ -48,10 +47,6 @@
      * options as well.
      */
     function process(options) {
-      if (service.disabled) {
-        return;
-      }
-
       var windowSelection = $window.getSelection();
       var range = windowSelection.getRangeAt(0);
 
@@ -98,6 +93,7 @@
       selection.snapToWord = snapToWord;
       selection.highlight = highlight;
       selection.removeHighlight = removeHighlight;
+      selection.text = range.toString();
       selection.getText = getText;
 
       return selection;
@@ -121,6 +117,10 @@
        * @name snapToWord
        */
       function snapToWord() {
+        if (isHighlighted()) {
+          throw new Error("Can't modify range after highlighting");
+        }
+
         var start = selection.range.startOffset;
         var startNode = selection.range.startContainer;
 
@@ -139,6 +139,8 @@
 
         selection.range.setStart(startNode, start);
         selection.range.setEnd(endNode, end);
+
+        selection.text = selection.range.toString();
       }
 
       /**
@@ -202,7 +204,7 @@
        * @returns {string}
        */
       function getText() {
-        return range.toString();
+        return selection.text;
       }
 
       /**
@@ -256,8 +258,6 @@
       }
     }
 
-
-
     /**
      * @namespace RangeTreeNode
      * @memberOf onselect
@@ -281,63 +281,66 @@
 
       /** @type {[onselect.RangeTreeNode]} */
       this.children = [];
+
+      /**
+       * @memberOf onselect.RangeTreeNode
+       * @name setStart
+       * @param {Node} node
+       * @param {number} index
+       *
+       * @description
+       *
+       */
+      this.setStart = function (node, index) {
+        this.start = {node: node, index: index};
+      };
+
+      this.setEnd = function (node, index) {
+        this.end = {node: node, index: index};
+      };
+
+      this.getParent = function () {
+        if (!this.parent) {
+          this.parent = new RangeTreeNode();
+          this.parent.children.push(this);
+        }
+        return this.parent;
+      };
+
+      this.createNewChild = function () {
+        var child = new RangeTreeNode(this);
+        this.children.push(child);
+        return child;
+      };
+
+      this.getNextSibling = function () {
+        return this.getParent().createNewChild();
+      };
+
+      this.toRanges = function () {
+        var top = this;
+        while (top.parent) {
+          top = top.parent;
+        }
+        return _toRangesRecursive(top, []);
+      };
+
+      function _toRangesRecursive(node, list) {
+        if (node.start && node.end) {
+          var range = $window.document.createRange();
+          range.setStart(node.start.node, node.start.index);
+          range.setEnd(node.end.node, node.end.index);
+
+          list.push(range);
+        }
+
+        for (var c in node.children) {
+          _toRangesRecursive(node.children[c], list);
+        }
+
+        return list;
+      }
     }
-
-    /**
-     * @memberOf onselect.RangeTreeNode
-     * @name setStart
-     * @param {Node} node
-     * @param {number} index
-     *
-     * @description
-     *
-     */
-    RangeTreeNode.prototype.setStart = function(node, index) {
-      this.start = {node: node, index: index};
-    };
-    RangeTreeNode.prototype.setEnd = function(node, index) {
-      this.end = {node: node, index: index};
-    };
-    RangeTreeNode.prototype.getParent = function() {
-      if (!this.parent) {
-        this.parent = new RangeTreeNode();
-        this.parent.children.push(this);
-      }
-      return this.parent;
-    };
-    RangeTreeNode.prototype.createNewChild = function() {
-      var child = new RangeTreeNode(this);
-      this.children.push(child);
-      return child;
-    };
-    RangeTreeNode.prototype.getNextSibling = function() {
-      return this.getParent().createNewChild();
-    };
-    RangeTreeNode.prototype.toRanges = function() {
-      var top = this;
-      while (top.parent) {
-        top = top.parent;
-      }
-      return _toRangesRecursive(top, []);
-    };
-
-    function _toRangesRecursive(node, list) {
-      if (node.start && node.end) {
-        var range = $window.document.createRange();
-        range.setStart(node.start.node, node.start.index);
-        range.setEnd(node.end.node, node.end.index);
-
-        list.push(range);
-      }
-
-      for (var c in node.children) {
-        _toRangesRecursive(node.children[c], list);
-      }
-
-      return list;
-    }
-
-    return service;
   }
 
 })();
